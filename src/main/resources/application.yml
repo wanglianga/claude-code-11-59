@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: drain-capacity-platform
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://127.0.0.1:5432/ccdev}
+    username: ${DB_USER:ccdev}
+    password: ${DB_PASSWORD:ccdev}
+    hikari:
+      maximum-pool-size: 10
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: ${SERVER_PORT:8080}
+
+app:
+  seed:
+    enabled: ${SEED_ENABLED:true}
+  hydraulics:
+    # 缺省扩大区间假设（会写入覆盖账本与证据，可复核）
+    default-roughness-min: 0.009   # 糙率缺失时取下界（光滑衬砌）
+    default-roughness-max: 0.035   # 糙率缺失时取上界（粗糙砌体/严重结垢）
+    default-silt-max: 0.30         # 淤积率未知时假设的面积损失上界
+    assumed-surcharge-m: 2.0       # 下游水位缺失时假设的出口壅水超高（米）
+    alignment-tolerance-seconds: 600  # 校准样本时间对齐容差（流量/水位/降雨同一时刻判定）
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
